@@ -34,29 +34,21 @@ public class SessionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") String id) {
-        try {
-            Session session = this.sessionService.getById(Long.valueOf(id));
+    public ResponseEntity<SessionDto> findById(@PathVariable("id") Long id) {
+        Session session = this.sessionService.getById(id);
 
-            if (session == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            return ResponseEntity.ok().body(this.sessionMapper.toDto(session));
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok().body(this.sessionMapper.toDto(session));
     }
 
     @GetMapping()
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<List<SessionDto>> findAll() {
         List<Session> sessions = this.sessionService.findAll();
 
         return ResponseEntity.ok().body(this.sessionMapper.toDto(sessions));
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@Valid @RequestBody SessionDto sessionDto) {
+    public ResponseEntity<SessionDto> create(@Valid @RequestBody SessionDto sessionDto) {
         log.info(sessionDto);
 
         Session session = this.sessionService.create(this.sessionMapper.toEntity(sessionDto));
@@ -66,51 +58,30 @@ public class SessionController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@PathVariable("id") String id, @Valid @RequestBody SessionDto sessionDto) {
-        try {
-            Session session = this.sessionService.update(Long.parseLong(id), this.sessionMapper.toEntity(sessionDto));
+    public ResponseEntity<SessionDto> update(@PathVariable("id") Long id, @Valid @RequestBody SessionDto sessionDto) {
+        Session session = this.sessionService.update(id, this.sessionMapper.toEntity(sessionDto));
 
-            return ResponseEntity.ok().body(this.sessionMapper.toDto(session));
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok().body(this.sessionMapper.toDto(session));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> save(@PathVariable("id") String id) {
-        try {
-            Session session = this.sessionService.getById(Long.valueOf(id));
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        this.sessionService.delete(id);
 
-            if (session == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            this.sessionService.delete(Long.parseLong(id));
-            return ResponseEntity.ok().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("{id}/participate/{userId}")
-    public ResponseEntity<?> participate(@PathVariable("id") String id, @PathVariable("userId") String userId) {
-        try {
-            this.sessionService.participate(Long.parseLong(id), Long.parseLong(userId));
+    public ResponseEntity<Void> participate(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        this.sessionService.participate(id, userId);
 
-            return ResponseEntity.ok().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id}/participate/{userId}")
-    public ResponseEntity<?> noLongerParticipate(@PathVariable("id") String id, @PathVariable("userId") String userId) {
-        try {
-            this.sessionService.noLongerParticipate(Long.parseLong(id), Long.parseLong(userId));
+    public ResponseEntity<Void> noLongerParticipate(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        this.sessionService.noLongerParticipate(id, userId);
 
-            return ResponseEntity.ok().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok().build();
     }
 }

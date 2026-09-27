@@ -1,7 +1,8 @@
+import { StaticProvider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 type CompilerOptions = Partial<{
-  providers: any[];
+  providers: StaticProvider[];
   useJit: boolean;
   preserveWhitespaces: boolean;
 }>;
