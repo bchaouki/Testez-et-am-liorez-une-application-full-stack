@@ -121,6 +121,21 @@ La capture d'écran ci-dessous résume les étapes précédentes :
 ![2-docker-desktop-bdd](pictures/2-docker-desktop-bdd.png)
 
 
+## Tests
+
+Pré-requis : Docker démarré (les tests d'intégration lancent une base MySQL via Testcontainers).
+
+```
+mvn clean verify
+```
+
+Cette commande :
+- exécute les tests unitaires (`services`, `mapper`, `security`, `exception`) et les tests d'intégration (`integration`, `@SpringBootTest` + MockMvc + MySQL) ;
+- génère le rapport de couverture JaCoCo dans `target/site/jacoco/index.html` ;
+- fait échouer le build si la couverture (instructions, branches, lignes, méthodes, classes) est inférieure à 80 %.
+
+Les packages `dto` et `payload` sont exclus de la couverture.
+
 ## Ressources
 
 
